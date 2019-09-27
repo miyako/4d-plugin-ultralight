@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<xliff version="1.0" xmlns:d4="http://www.4d.com/d4-ns">
+    <header>
+        <note>Ultralight</note>
+    </header>
+    <group resname="themes">
+        <trans-unit id="" resname="D3D717ACD63243B69CA4FD2316C958B9" translate="no">
+            <source>Ultralight</source>
+        </trans-unit>
+    </group>
+    <group restype="x-4DK#" d4:groupName="D3D717ACD63243B69CA4FD2316C958B9">
+    </group>
+</xliff>

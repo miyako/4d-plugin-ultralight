@@ -1,0 +1,11 @@
+{
+	"name": "Ultralight",
+	"id": 20000,
+	"commands": [
+		{
+			"theme": "Ultralight",
+			"syntax": "Ultralight Test(&T;&J):J",
+			"threadSafe": true
+		}
+	]
+}
