@@ -12,3 +12,7 @@ Headless web browser base on [Ultralight](https://github.com/ultralight-ux/Ultra
 <img src="https://user-images.githubusercontent.com/1725068/41266195-ddf767b2-6e30-11e8-9d6b-2adf6a9f57a5.png" width="32" height="32" />
 
 ![preemption xx](https://user-images.githubusercontent.com/1725068/41327179-4e839948-6efd-11e8-982b-a670d511e04f.png)
+
+### Syntax
+
+[miyako.github.io](https://miyako.github.io/2019/10/01/4d-plugin-ultralight.html)
