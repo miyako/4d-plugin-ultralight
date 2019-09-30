@@ -24,6 +24,17 @@
 		D10C469A233E01C2004CA01C /* manifest.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = D10C4680233DFE6B004CA01C /* manifest.json */; };
 		D10C469D233E58A6004CA01C /* IFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10C469B233E58A6004CA01C /* IFileSystem.cpp */; };
 		D10C469E233E58A6004CA01C /* IFileSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = D10C469C233E58A6004CA01C /* IFileSystem.hpp */; };
+		D10C46A02341F424004CA01C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D10C469F2341F424004CA01C /* CoreFoundation.framework */; };
+		D10C46A22341F458004CA01C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D10C46A12341F458004CA01C /* CoreServices.framework */; };
+		D1D4718A234284EC0045CDBE /* 4DPlugin-JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = D1D47188234284EC0045CDBE /* 4DPlugin-JSON.h */; };
+		D1D4718B234284EC0045CDBE /* 4DPlugin-JSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1D47189234284EC0045CDBE /* 4DPlugin-JSON.cpp */; };
+		D1D4718E234289D20045CDBE /* C_BLOB.h in Headers */ = {isa = PBXBuildFile; fileRef = D1D4718C234289D20045CDBE /* C_BLOB.h */; };
+		D1D4718F234289D20045CDBE /* C_BLOB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1D4718D234289D20045CDBE /* C_BLOB.cpp */; };
+		D1D47191234289D80045CDBE /* C_TYPES.h in Headers */ = {isa = PBXBuildFile; fileRef = D1D47190234289D80045CDBE /* C_TYPES.h */; };
+		D1D4719423428A5F0045CDBE /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D4719223428A5F0045CDBE /* libz.a */; };
+		D1D4719523428A5F0045CDBE /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D4719323428A5F0045CDBE /* libpng16.a */; };
+		D1D4719823428AA30045CDBE /* C_TEXT.h in Headers */ = {isa = PBXBuildFile; fileRef = D1D4719623428AA30045CDBE /* C_TEXT.h */; };
+		D1D4719923428AA30045CDBE /* C_TEXT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1D4719723428AA30045CDBE /* C_TEXT.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,7 +53,7 @@
 /* Begin PBXFileReference section */
 		D10C4664233DFAE1004CA01C /* Ultralight.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Ultralight.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D10C4673233DFB90004CA01C /* 4DPlugin-Ultralight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "4DPlugin-Ultralight.h"; sourceTree = "<group>"; };
-		D10C4674233DFB91004CA01C /* 4DPlugin-Ultralight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "4DPlugin-Ultralight.cpp"; sourceTree = "<group>"; };
+		D10C4674233DFB91004CA01C /* 4DPlugin-Ultralight.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = "4DPlugin-Ultralight.cpp"; sourceTree = "<group>"; };
 		D10C4677233DFC99004CA01C /* libUltralight.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libUltralight.dylib; path = dylib/libUltralight.dylib; sourceTree = "<group>"; };
 		D10C4678233DFC99004CA01C /* libUltralightCore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libUltralightCore.dylib; path = dylib/libUltralightCore.dylib; sourceTree = "<group>"; };
 		D10C4679233DFC99004CA01C /* libAppCore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libAppCore.dylib; path = dylib/libAppCore.dylib; sourceTree = "<group>"; };
@@ -57,8 +68,19 @@
 		D10C468B233DFEA5004CA01C /* EntryPoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EntryPoints.h; path = "4D Plugin API/EntryPoints.h"; sourceTree = "<group>"; };
 		D10C4694233E018A004CA01C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D10C4697233E0194004CA01C /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D10C469B233E58A6004CA01C /* IFileSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IFileSystem.cpp; sourceTree = "<group>"; };
+		D10C469B233E58A6004CA01C /* IFileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = IFileSystem.cpp; sourceTree = "<group>"; };
 		D10C469C233E58A6004CA01C /* IFileSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IFileSystem.hpp; sourceTree = "<group>"; };
+		D10C469F2341F424004CA01C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		D10C46A12341F458004CA01C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		D1D47188234284EC0045CDBE /* 4DPlugin-JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "4DPlugin-JSON.h"; path = "support/4DPlugin-JSON.h"; sourceTree = "<group>"; };
+		D1D47189234284EC0045CDBE /* 4DPlugin-JSON.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "4DPlugin-JSON.cpp"; path = "support/4DPlugin-JSON.cpp"; sourceTree = "<group>"; };
+		D1D4718C234289D20045CDBE /* C_BLOB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = C_BLOB.h; path = "4D Plugin API/Classes/C_BLOB.h"; sourceTree = "<group>"; };
+		D1D4718D234289D20045CDBE /* C_BLOB.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = C_BLOB.cpp; path = "4D Plugin API/Classes/C_BLOB.cpp"; sourceTree = "<group>"; };
+		D1D47190234289D80045CDBE /* C_TYPES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = C_TYPES.h; path = "4D Plugin API/Classes/C_TYPES.h"; sourceTree = "<group>"; };
+		D1D4719223428A5F0045CDBE /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = a/libz.a; sourceTree = "<group>"; };
+		D1D4719323428A5F0045CDBE /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = a/libpng16.a; sourceTree = "<group>"; };
+		D1D4719623428AA30045CDBE /* C_TEXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = C_TEXT.h; path = "4D Plugin API/Classes/C_TEXT.h"; sourceTree = "<group>"; };
+		D1D4719723428AA30045CDBE /* C_TEXT.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = C_TEXT.cpp; path = "4D Plugin API/Classes/C_TEXT.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +88,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1D4719423428A5F0045CDBE /* libz.a in Frameworks */,
+				D1D4719523428A5F0045CDBE /* libpng16.a in Frameworks */,
+				D10C46A22341F458004CA01C /* CoreServices.framework in Frameworks */,
+				D10C46A02341F424004CA01C /* CoreFoundation.framework in Frameworks */,
 				D10C467B233DFC99004CA01C /* libUltralight.dylib in Frameworks */,
 				D10C467C233DFC99004CA01C /* libUltralightCore.dylib in Frameworks */,
 				D10C467D233DFC99004CA01C /* libAppCore.dylib in Frameworks */,
@@ -79,6 +105,13 @@
 		D10C465B233DFAE1004CA01C = {
 			isa = PBXGroup;
 			children = (
+				D1D4718D234289D20045CDBE /* C_BLOB.cpp */,
+				D1D4718C234289D20045CDBE /* C_BLOB.h */,
+				D1D4719723428AA30045CDBE /* C_TEXT.cpp */,
+				D1D4719623428AA30045CDBE /* C_TEXT.h */,
+				D1D47190234289D80045CDBE /* C_TYPES.h */,
+				D1D47189234284EC0045CDBE /* 4DPlugin-JSON.cpp */,
+				D1D47188234284EC0045CDBE /* 4DPlugin-JSON.h */,
 				D10C4682233DFE90004CA01C /* 4D Plugin API */,
 				D10C4674233DFB91004CA01C /* 4DPlugin-Ultralight.cpp */,
 				D10C4673233DFB90004CA01C /* 4DPlugin-Ultralight.h */,
@@ -101,6 +134,10 @@
 		D10C4676233DFC99004CA01C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D1D4719323428A5F0045CDBE /* libpng16.a */,
+				D1D4719223428A5F0045CDBE /* libz.a */,
+				D10C46A12341F458004CA01C /* CoreServices.framework */,
+				D10C469F2341F424004CA01C /* CoreFoundation.framework */,
 				D10C4679233DFC99004CA01C /* libAppCore.dylib */,
 				D10C4677233DFC99004CA01C /* libUltralight.dylib */,
 				D10C4678233DFC99004CA01C /* libUltralightCore.dylib */,
@@ -143,7 +180,11 @@
 				D10C468D233E0148004CA01C /* 4DPluginAPI.h in Headers */,
 				D10C468E233E0148004CA01C /* EntryPoints.h in Headers */,
 				D10C468F233E0148004CA01C /* Flags.h in Headers */,
+				D1D4718A234284EC0045CDBE /* 4DPlugin-JSON.h in Headers */,
 				D10C4690233E0148004CA01C /* PrivateTypes.h in Headers */,
+				D1D4718E234289D20045CDBE /* C_BLOB.h in Headers */,
+				D1D47191234289D80045CDBE /* C_TYPES.h in Headers */,
+				D1D4719823428AA30045CDBE /* C_TEXT.h in Headers */,
 				D10C469E233E58A6004CA01C /* IFileSystem.hpp in Headers */,
 				D10C4691233E0148004CA01C /* PublicTypes.h in Headers */,
 				D10C4692233E0148004CA01C /* 4DPlugin-Ultralight.h in Headers */,
@@ -243,8 +284,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1D4718B234284EC0045CDBE /* 4DPlugin-JSON.cpp in Sources */,
 				D10C4675233DFB91004CA01C /* 4DPlugin-Ultralight.cpp in Sources */,
 				D10C4686233DFE9F004CA01C /* 4DPluginAPI.c in Sources */,
+				D1D4718F234289D20045CDBE /* C_BLOB.cpp in Sources */,
+				D1D4719923428AA30045CDBE /* C_TEXT.cpp in Sources */,
 				D10C469D233E58A6004CA01C /* IFileSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,7 +316,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -325,6 +369,7 @@
 				USER_HEADER_SEARCH_PATHS = (
 					"include/**",
 					"'4D Plugin API'",
+					include/libpng16,
 				);
 			};
 			name = Debug;
@@ -338,7 +383,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -384,6 +429,7 @@
 				USER_HEADER_SEARCH_PATHS = (
 					"include/**",
 					"'4D Plugin API'",
+					include/libpng16,
 				);
 			};
 			name = Release;
@@ -399,6 +445,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/dylib",
+					"$(PROJECT_DIR)/a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.4D.Ultralight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -423,6 +470,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/dylib",
+					"$(PROJECT_DIR)/a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.4D.Ultralight;
 				PRODUCT_NAME = "$(TARGET_NAME)";

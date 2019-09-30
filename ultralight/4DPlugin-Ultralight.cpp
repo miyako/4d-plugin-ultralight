@@ -10,9 +10,261 @@
 
 #include "4DPlugin-Ultralight.h"
 
-#include <Ultralight/Ultralight.h>
-
 using namespace ultralight;
+
+#include <AppCore/JSHelpers.h>
+
+void write_data_fn(png_structp png_ptr, png_bytep buf, png_size_t size){
+    C_BLOB *blob = (C_BLOB *)png_get_io_ptr(png_ptr);
+    blob->addBytes((const uint8_t *)buf, (uint32_t)size);
+}
+
+void output_flush_fn(png_structp png_ptr)
+{
+    
+}
+
+class MyApp : public LoadListener {
+    
+    RefPtr<Renderer> renderer;
+    IFileSystem *filesystem = NULL;
+    
+    std::map<uint32_t, RefPtr<View>> views;
+    
+    bool done_ = false;
+    
+    private:
+    
+    bool GetView(int32_t i, RefPtr<View>& view) {
+        
+        auto pos = views.find(i);
+        
+        if(pos != views.end()) {
+            view = pos->second;
+            return true;
+        }
+        
+        return false;
+
+    }
+    
+    public:
+
+    void Eval(int32_t i, JSString& code) {
+
+        RefPtr<View> view;
+        if(GetView(i, view)) {
+            
+            JSContextRef ctx = view->js_context();
+            SetJSContext(ctx);
+            code = JSEval(code).ToString();
+            SetJSContext(0);
+        }
+    }
+    
+    void Resize(int32_t i, uint32_t width, uint32_t height) {
+        
+        RefPtr<View> view;
+        if(GetView(i, view)) {
+            
+            view->Resize(width, height);
+            
+            while(view->is_loading()) {
+                renderer->Update();
+            }
+            
+            renderer->Render();
+        }
+    }
+    
+    void LoadHTML(int32_t i, const String16& html) {
+
+        RefPtr<View> view;
+        if(GetView(i, view)) {
+            
+            view->LoadHTML(html);
+            
+            while(view->is_loading()) {
+                renderer->Update();
+            }
+            
+            renderer->Render();
+        }
+    }
+    
+    void GetSnapshot(int32_t i, C_BLOB& png) {
+
+        RefPtr<View> view;
+        if(GetView(i, view)) {
+         
+            RefPtr<Bitmap> bitmap = view->bitmap();
+            
+            int dpi = 96;
+            
+            png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+            if(png_ptr)
+            {
+                png_infop info_ptr = png_create_info_struct(png_ptr);
+                if(info_ptr)
+                {
+                    if(setjmp(png_jmpbuf(png_ptr)))
+                    {
+                        png_destroy_write_struct(&png_ptr, &info_ptr);
+                    }else
+                    {
+                        png_set_write_fn(png_ptr, (png_voidp)&png, write_data_fn, output_flush_fn);
+                        
+                        void *bytes = bitmap->LockPixels();
+                        uint32_t width = bitmap->width();
+                        uint32_t height = bitmap->height();
+                        uint32_t depth = 8;
+                        
+                        png_set_IHDR (png_ptr,
+                                      info_ptr,
+                                      width,
+                                      height,
+                                      depth,
+                                      PNG_COLOR_TYPE_RGB_ALPHA,
+                                      PNG_INTERLACE_NONE,
+                                      PNG_COMPRESSION_TYPE_DEFAULT,
+                                      PNG_FILTER_TYPE_DEFAULT);
+                        
+                        png_set_pHYs(png_ptr, info_ptr,
+                                     dpi * INCHES_PER_METER,
+                                     dpi * INCHES_PER_METER,
+                                     PNG_RESOLUTION_METER);
+                        
+                        png_byte **row_pointers = (png_byte **)png_malloc(png_ptr, height * sizeof (png_byte *));
+                        
+                        char *buffer_p = (char *)bytes;
+                        
+                        BitmapFormat format = bitmap->format();
+                        
+                        switch (format) {
+                            case kBitmapFormat_A8:
+                            for(std::uint32_t scanY(0); scanY < height; ++scanY)
+                            {
+                                png_byte *row = (png_byte *)png_malloc(png_ptr, sizeof (uint8_t) *width);
+                                row_pointers[scanY] = row;
+                                
+                                for(std::uint32_t scanX(0); scanX < width; ++scanX)
+                                {
+                                    *row++ = *buffer_p++;
+                                }
+                            }
+                            break;
+                            
+                            case kBitmapFormat_RGBA8:
+                            for(std::uint32_t scanY(0); scanY < height; ++scanY)
+                            {
+                                png_byte *row = (png_byte *)png_malloc(png_ptr, sizeof (uint8_t) *width * 4);
+                                row_pointers[scanY] = row;
+                                
+                                for(std::uint32_t scanX(0); scanX < width; ++scanX)
+                                {
+                                    *row++ = *buffer_p++;
+                                    *row++ = *buffer_p++;
+                                    *row++ = *buffer_p++;
+                                    *row++ = *buffer_p++;
+                                }
+                            }
+                            break;
+                            
+                        }
+   
+                        png_write_info(png_ptr, info_ptr);
+                        png_set_rows (png_ptr, info_ptr, row_pointers);
+                        png_write_png (png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
+                        png_write_end(png_ptr, info_ptr);
+                        png_destroy_write_struct(&png_ptr, &info_ptr);
+                        
+                        for(std::uint32_t scanY(0); scanY != height; ++scanY)
+                        {
+                            png_free(png_ptr, row_pointers[scanY]);
+                        }
+                        png_free (png_ptr, row_pointers);
+                        
+                        bitmap->UnlockPixels();
+                    }
+                }
+            }
+        }
+    }
+    
+    void LoadURL(int32_t i, const String16& path) {
+        
+        RefPtr<View> view;
+        if(GetView(i, view)) {
+            
+            view->LoadURL(path);
+
+            while(view->is_loading()) {
+                renderer->Update();
+            }
+            
+            renderer->Render();
+        }
+    }
+    
+    int32_t CreateView(uint32_t width, uint32_t height, bool transparent) {
+        
+        RefPtr<View> view = renderer->CreateView(width, height, transparent);
+        
+        int32_t i = 1;
+        
+        while (views.find(i) != views.end()) {
+            i++;
+        }
+        
+        views.insert(std::map<int32_t, RefPtr<View>>::value_type(i, view));
+        
+        view->set_load_listener(this);
+        
+        return i;
+    }
+    
+    MyApp() {
+        
+        auto& platform = Platform::instance();
+        filesystem = new IFileSystem();
+        platform.set_file_system(filesystem);
+        renderer = Renderer::Create();
+        
+    }
+    
+    virtual ~MyApp() {}
+    
+    virtual void OnFinishLoading(View* caller) {
+
+    }
+    
+    virtual void OnDOMReady(View* caller) {
+        
+    }
+    
+};
+
+MyApp *app = NULL;
+
+void OnStartup () {
+    
+    if(!app)
+    {
+        app = new MyApp();
+    }
+    
+}
+
+void OnExit () {
+    
+    if(app)
+    {
+        delete app;
+        app = NULL;
+    }
+    
+}
+
 
 #pragma mark -
 
@@ -22,12 +274,34 @@ void PluginMain(PA_long32 selector, PA_PluginParameters params) {
 	{
         switch(selector)
         {
-			// --- Ultralight
+            case kInitPlugin:
+            case kServerInitPlugin:
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) OnStartup, NULL);
+            break;
             
-			case 1 :
-                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Test, params);
-				break;
-
+            case kDeinitPlugin:
+            case kServerDeinitPlugin:
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) OnExit, NULL);
+            break;
+            
+            // --- Ultralight
+            
+            case 1 :
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Create_view, params);
+            break;
+            case 2 :
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Load_html, params);
+            break;
+            case 3 :
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Load_path, params);
+            break;
+            case 4 :
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Get_snapshot, params);
+            break;
+            case 5 :
+                PA_RunInMainProcess((PA_RunInMainProcessProcPtr) Ultralight_Evaluate_script, params);
+            break;
+            
         }
 
 	}
@@ -37,90 +311,134 @@ void PluginMain(PA_long32 selector, PA_PluginParameters params) {
 	}
 }
 
-class MyApp : public LoadListener {
-    RefPtr<Renderer> renderer_;
-    RefPtr<View> view_;
-    bool done_ = false;
-public:
-    MyApp() {
-        auto& platform = Platform::instance();
-        IFileSystem *filesystem = new IFileSystem();
-        
-        platform.set_file_system(filesystem);
-        ///
-        /// Create our Renderer (you should only create this once per application)
-        ///
-        renderer_ = Renderer::Create();
-        
-        ///
-        /// Create our View.
-        ///
-        view_ = renderer_->CreateView(200, 200, false);
-        
-        ///
-        /// Register our MyApp instance as a load listener so we can handle the
-        /// View's OnFinishLoading event below.
-        ///
-        view_->set_load_listener(this);
-        
-        ///
-        /// Load a string of HTML.
-        ///
-        
-
-        
-        view_->LoadURL("file:///Users/miyako/Desktop/4d-plugin-ultralight/test/Resources/Takasebune/main.xhtml");
-        //view_->LoadHTML("<h1>Hello!</h1><p>Welcome to Ultralight!</p>");
-    }
-    
-    virtual ~MyApp() {}
-    
-    void Run() {
-        ///
-        /// Continuously update our Renderer until are done flag is set to true.
-        ///
-        /// @note Calling Renderer::Update handles any pending network requests,
-        ///       resource loads, and JavaScript timers.
-        ///
-        while (!done_)
-            renderer_->Update();
-    }
-    
-    ///
-    /// Inherited from LoadListener, this event is called when the View finishes
-    /// loading a page into the main frame.
-    ///
-    virtual void OnFinishLoading(ultralight::View* caller) {
-        ///
-        /// Render all Views (the default GPUDriver paints each View to an
-        /// offscreen Bitmap which you can access via View::Bitmap)
-        ///
-        renderer_->Render();
-        
-        ///
-        /// Get our View's bitmap and write it to a PNG.
-        ///
-        view_->bitmap()->WritePNG("/Users/miyako/Desktop/result.png");
-        
-        ///
-        /// Set our done flag to true to exit the Run loop.
-        ///
-        done_ = true;
-    }
-};
-
-MyApp *app = NULL;
-
 #pragma mark -
 
-void Ultralight_Test(PA_PluginParameters params) {
-
-    if(!app)
-    {
-        app = new MyApp();
+void path_to_file_url(String16& path) {
+    
+#if VERSIONMAC
+    NSString *p = [[NSString alloc]initWithCharacters:(const unichar *)path.data() length:path.length()];
+    if(p) {
+        NSURL *url = [NSURL fileURLWithPath:p];
+        if(url) {
+            NSString *u = [url absoluteString];
+            if(u) {
+                NSUInteger len = [u length];
+                std::vector<unichar> buf(len+1);
+                [u getCharacters:&buf[0] range:NSMakeRange(0, len)];
+                path = String16((unsigned short *)&buf[0], len);
+            }
+        }
     }
-    
-    app->Run();
-    
+#endif
 }
 
+void hfs_to_posix(String16& path) {
+    
+#if VERSIONMAC
+    NSString *p = [[NSString alloc]initWithCharacters:(const unichar *)path.data() length:path.length()];
+    if(p) {
+        NSURL *url = (NSURL *)CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)p, kCFURLHFSPathStyle, false);
+        if(url) {
+            NSString *u = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLPOSIXPathStyle);
+            if(u) {
+                NSUInteger len = [u length];
+                std::vector<unichar> buf(len+1);
+                [u getCharacters:&buf[0] range:NSMakeRange(0, len)];
+                path = String16((unsigned short *)&buf[0], len);
+                [u release];
+            }
+            [url release];
+        }
+        [p release];
+    }
+#endif
+}
+
+void Ultralight_Create_view(PA_PluginParameters params) {
+
+    PA_long32 height = PA_GetLongParameter(params, 1);
+    PA_long32 width = PA_GetLongParameter(params, 2);
+    bool transparent = (bool)PA_GetLongParameter(params, 3);
+    PA_long32 i = 0;
+    
+    if(app)
+    {
+        i = app->CreateView(width, height, transparent);
+    }
+
+    PA_ReturnLong(params, i);
+}
+
+void Ultralight_Load_html(PA_PluginParameters params) {
+
+    PA_ObjectRef param = PA_GetObjectParameter(params, 1);
+    PA_Unistring *ustr = PA_GetStringParameter(params, 2);
+    String16 html = String16(ustr->fString, ustr->fLength);
+    
+    if(app)
+    {
+        uint32_t i = (uint32_t)ob_get_n(param, L"id");
+        if(i) {
+            app->LoadHTML(i, html);
+        }
+    }
+}
+
+void Ultralight_Load_path(PA_PluginParameters params) {
+    
+    PA_long32 i = PA_GetLongParameter(params, 1);
+    PA_Unistring *ustr = PA_GetStringParameter(params, 2);
+    String16 path = String16(ustr->fString, ustr->fLength);
+
+    CUTF16String _u = CUTF16String(ustr->fString, ustr->fLength);
+    PA_Unichar http[] = { 'h', 't', 't', 'p', 0 };
+    
+    if(0 != _u.compare(0, 4, http))
+    {
+#if VERSIONMAC
+        hfs_to_posix(path);
+#endif
+        
+        path_to_file_url(path);
+    }
+    
+    if(app)
+    {
+        if(i) {
+            app->LoadURL(i, path);
+        }
+    }
+}
+
+void Ultralight_Get_snapshot(PA_PluginParameters params) {
+    
+    PA_long32 i = PA_GetLongParameter(params, 1);
+    
+    if(app)
+    {
+        if(i) {
+            C_BLOB png;
+            app->GetSnapshot(i, png);
+            
+            PA_Picture picture = PA_CreatePicture((void *)png.getBytesPtr(), png.getBytesLength());
+            
+            PA_ReturnPicture(params, picture);
+        }
+    }
+}
+
+void Ultralight_Evaluate_script(PA_PluginParameters params) {
+    
+    PA_long32 i = PA_GetLongParameter(params, 1);
+    PA_Unistring *ustr = PA_GetStringParameter(params, 2);
+    JSString code = JSString(String16(ustr->fString, ustr->fLength));
+    
+    if(app)
+    {
+        if(i) {
+            app->Eval(i, code);
+            String returnValue(code);
+            PA_ReturnString(params, (PA_Unichar *)returnValue.utf16().data());
+        }
+    }
+}

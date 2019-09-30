@@ -12,13 +12,22 @@
 #define PLUGIN_ULTRALIGHT_H
 
 #include "4DPluginAPI.h"
+
+#include "C_BLOB.h"
+
+#include "png.h"
+#define INCHES_PER_METER (100.0/2.54)
+
+#include "4DPlugin-JSON.h"
+
 #include "IFileSystem.hpp"
-#include <iostream>
-#include <string>
-#include <memory>
 
 #pragma mark -
 
-void Ultralight_Test(PA_PluginParameters params);
+void Ultralight_Create_view(PA_PluginParameters params);
+void Ultralight_Load_html(PA_PluginParameters params);
+void Ultralight_Load_path(PA_PluginParameters params);
+void Ultralight_Get_snapshot(PA_PluginParameters params);
+void Ultralight_Evaluate_script(PA_PluginParameters params);
 
 #endif /* PLUGIN_ULTRALIGHT_H */

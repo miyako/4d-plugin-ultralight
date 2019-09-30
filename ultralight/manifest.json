@@ -4,8 +4,28 @@
 	"commands": [
 		{
 			"theme": "Ultralight",
-			"syntax": "Ultralight Test(&T;&J):J",
+            "syntax": "Ultralight Create view(&L;&L;&L):L",
 			"threadSafe": true
-		}
+		},
+        {
+            "theme": "Ultralight",
+            "syntax": "Ultralight Load html(&L;&T):L",
+            "threadSafe": true
+        },
+        {
+            "theme": "Ultralight",
+            "syntax": "Ultralight Load path(&L;&T):L",
+            "threadSafe": true
+        },
+        {
+            "theme": "Ultralight",
+            "syntax": "Ultralight Get snapshot(&L):P",
+            "threadSafe": true
+        },
+        {
+            "theme": "Ultralight",
+            "syntax": "Ultralight Evaluate script(&L;&T):T",
+            "threadSafe": true
+        }
 	]
 }

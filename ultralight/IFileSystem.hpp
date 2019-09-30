@@ -9,7 +9,21 @@
 #ifndef IFileSystem_hpp
 #define IFileSystem_hpp
 
+#include "4DPluginAPI.h"
+
+#include <iostream>
+#include <string>
+#include <memory>
+#include <map>
+#include <vector>
+
 #include <Ultralight/Ultralight.h>
+
+#if VERSIONMAC
+#import <Foundation/Foundation.h>
+#import <CoreServices/CoreServices.h>
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 using namespace ultralight;
 
