@@ -371,13 +371,12 @@ void Ultralight_Create_view(PA_PluginParameters params) {
 
 void Ultralight_Load_html(PA_PluginParameters params) {
 
-    PA_ObjectRef param = PA_GetObjectParameter(params, 1);
+    PA_long32 i = PA_GetLongParameter(params, 1);
     PA_Unistring *ustr = PA_GetStringParameter(params, 2);
     String16 html = String16(ustr->fString, ustr->fLength);
     
     if(app)
     {
-        uint32_t i = (uint32_t)ob_get_n(param, L"id");
         if(i) {
             app->LoadHTML(i, html);
         }
@@ -438,7 +437,10 @@ void Ultralight_Evaluate_script(PA_PluginParameters params) {
         if(i) {
             app->Eval(i, code);
             String returnValue(code);
-            PA_ReturnString(params, (PA_Unichar *)returnValue.utf16().data());
+            // String16 is length-counted; PA_ReturnString needs a NUL-terminated buffer.
+            const String16& u = returnValue.utf16();
+            CUTF16String result = u.length() ? CUTF16String((const PA_Unichar *)u.data(), u.length()) : CUTF16String();
+            PA_ReturnString(params, (PA_Unichar *)result.c_str());
         }
     }
 }
